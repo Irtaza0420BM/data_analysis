@@ -36,10 +36,14 @@ def search(df_fl, df_ml, keywords):
     
     # Search FL
     for i in range(0, len(df_fl), 3):
-        color = str(df_fl.iloc[i, 0]).strip().lower().replace('\n', ' ')
+        color = str(df_fl.iloc[i, 0]).strip().lower()
+        color = ' '.join(color.split())  # Remove extra spaces/newlines
+        
         for j in range(1, len(df_fl.columns)):
             if pd.notna(df_fl.iloc[i+2, j]):
-                show = str(df_fl.iloc[i+2, j]).replace('\n', ' ').strip()
+                show = str(df_fl.iloc[i+2, j])
+                show = ' '.join(show.split())  # Split and rejoin with single space
+                
                 if any(kw.lower() in show.lower() for kw in keywords):
                     if show not in seen:
                         seen.add(show)
@@ -47,17 +51,21 @@ def search(df_fl, df_ml, keywords):
                             "Show Name": show,
                             "Data Source": "FL",
                             "Hair Color": color,
-                            # "Score": "",
-                            # "Rating": "",
-                            # "Want to Watch": ""
+                            "Score": "",
+                            "Rating": "",
+                            "Want to Watch": ""
                         })
     
     # Search ML
     for i in range(0, len(df_ml), 3):
-        color = str(df_ml.iloc[i, 0]).strip().lower().replace('\n', ' ')
+        color = str(df_ml.iloc[i, 0]).strip().lower()
+        color = ' '.join(color.split())  # Remove extra spaces/newlines
+        
         for j in range(1, len(df_ml.columns)):
             if pd.notna(df_ml.iloc[i+2, j]):
-                show = str(df_ml.iloc[i+2, j]).replace('\n', ' ').strip()
+                show = str(df_ml.iloc[i+2, j])
+                show = ' '.join(show.split())  # Split and rejoin with single space
+                
                 if any(kw.lower() in show.lower() for kw in keywords):
                     if show not in seen:
                         seen.add(show)
@@ -65,17 +73,16 @@ def search(df_fl, df_ml, keywords):
                             "Show Name": show,
                             "Data Source": "ML",
                             "Hair Color": color,
-                            # "Score": "",
-                            # "Rating": "",
-                            # "Want to Watch": ""
+                            "Score": "",
+                            "Rating": "",
+                            "Want to Watch": ""
                         })
     
-    # Write to CSV with proper quoting
+    # Write to CSV
     df_results = pd.DataFrame(results)
     df_results.to_csv("search_results.csv", index=False, quoting=1)
     print(f"\nFound {len(results)} shows. Saved to 'search_results.csv'")
     return df_results
-
 
     
 analyze(fl_data, "FL Analysis")
